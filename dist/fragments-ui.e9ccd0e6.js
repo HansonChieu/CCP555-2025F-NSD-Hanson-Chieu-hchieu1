@@ -712,8 +712,8 @@ parcelHelpers.export(exports, "getUser", ()=>getUser);
 var _oidcClientTs = require("oidc-client-ts");
 const cognitoAuthConfig = {
     authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_oCHIy6UWP',
-    client_id: "5trechk434g6ej7ob246skgbn7",
-    redirect_uri: "http://localhost:1234",
+    client_id: undefined,
+    redirect_uri: undefined,
     response_type: 'code',
     scope: 'phone openid email',
     // no revoke of "access token" ([URL]
@@ -739,13 +739,13 @@ async function signOut() {
         console.error('Error clearing local session:', error);
     }
     // For Cognito, construct the Hosted UI logout URL using env-configured domain
-    const region = "us-east-1_oCHIy6UWP".split('_')[0] || 'us-east-1';
-    const domainPrefix = "us-east-1ochiy6uwp";
+    const region = ''.split('_')[0] || 'us-east-1';
+    const domainPrefix = undefined;
     if (!domainPrefix) {
         console.error('Missing AWS_COGNITO_DOMAIN for logout');
         return;
     }
-    const logoutUrl = `https://${domainPrefix}.auth.${region}.amazoncognito.com/logout?client_id=${"5trechk434g6ej7ob246skgbn7"}&logout_uri=${encodeURIComponent("http://localhost:1234")}`;
+    const logoutUrl = `https://${domainPrefix}.auth.${region}.amazoncognito.com/logout?client_id=${undefined}&logout_uri=${encodeURIComponent(undefined)}`;
     window.location.href = logoutUrl;
 }
 // Create a simplified view of the user, with an extra method for creating the auth headers
