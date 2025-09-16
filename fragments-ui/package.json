@@ -1,0 +1,23 @@
+{
+  "name": "fragments-ui",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Simple web app to manage authentication with our User Pool and test our back-end fragments microservice, using AWS..",
+  "scripts": {
+    "start": "parcel fragments-ui/src/index.html",
+    "build": "parcel build fragments-ui/src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+[https://github.com/HansonChieu/fragments-ui.git]"
+  },
+  "author": "Hanson Chieu",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "oidc-client-ts": "^3.3.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.15.4"
+  }
+}
