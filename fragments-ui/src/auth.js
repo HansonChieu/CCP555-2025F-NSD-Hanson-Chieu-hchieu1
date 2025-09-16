@@ -23,6 +23,26 @@ export async function signIn() {
   // Trigger a redirect to the Cognito auth page, so user can authenticate
   await userManager.signinRedirect();
 }
+
+export async function signOut() {
+  try {
+    // Clear the user from the UserManager first
+    await userManager.removeUser();
+  } catch (error) {
+    console.error('Error clearing local session:', error);
+  }
+
+  // For Cognito, construct the Hosted UI logout URL using env-configured domain
+  const region = (process.env.AWS_COGNITO_POOL_ID || '').split('_')[0] || 'us-east-1';
+  const domainPrefix = process.env.AWS_COGNITO_DOMAIN;
+  if (!domainPrefix) {
+    console.error('Missing AWS_COGNITO_DOMAIN for logout');
+    return;
+  }
+  const logoutUrl = `https://${domainPrefix}.auth.${region}.amazoncognito.com/logout?client_id=${process.env.AWS_COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(process.env.OAUTH_SIGN_IN_REDIRECT_URL)}`;
+  window.location.href = logoutUrl;
+}
+
  
 // Create a simplified view of the user, with an extra method for creating the auth headers
 function formatUser(user) {
@@ -53,3 +73,4 @@ export async function getUser() {
   const user = await userManager.getUser();
   return user ? formatUser(user) : null;
 }
+
