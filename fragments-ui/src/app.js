@@ -1,5 +1,5 @@
 import { signIn, getUser, signOut } from './auth.js';
-// import { getUserFragments } from './api.js';
+import { getUserFragments } from './api.js';
 
 async function init() {
   const userSection = document.querySelector('#user');
@@ -22,13 +22,14 @@ async function init() {
       await signOut();
     });
     userSection.hidden = false;
-    loginBtn.disabled = true;
-    // try {
-    //   const fragments = await getUserFragments(user);
-    //   console.log('User fragments:', fragments);
-    // } catch (error) {
-    //   console.error('Failed to get fragments:', error);
-    // }
+    loginBtn.hidden = true;
+    
+    try {
+      const fragments = await getUserFragments(user);
+      console.log('User fragments:', fragments);
+    } catch (error) {
+      console.error('Failed to get fragments:', error);
+    }
   } else {
     userSection.hidden = true; // Hide user section
     loginBtn.disabled = false

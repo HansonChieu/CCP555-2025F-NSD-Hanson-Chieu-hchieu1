@@ -18,6 +18,8 @@ const cognitoAuthConfig = {
 const userManager = new UserManager({
   ...cognitoAuthConfig,
 });
+
+export { userManager };
  
 export async function signIn() {
   // Trigger a redirect to the Cognito auth page, so user can authenticate
