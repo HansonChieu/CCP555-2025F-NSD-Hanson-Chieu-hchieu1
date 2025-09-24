@@ -668,7 +668,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 
 },{}],"14hXP":[function(require,module,exports,__globalThis) {
 var _authJs = require("./auth.js");
-var _apiJs = require("./api.js");
+// import { getUserFragments } from './api.js';
 async function init() {
     const userSection = document.querySelector('#user');
     const loginBtn = document.querySelector('#login');
@@ -688,12 +688,12 @@ async function init() {
         });
         userSection.hidden = false;
         loginBtn.disabled = true;
-        try {
-            const fragments = await (0, _apiJs.getUserFragments)(user);
-            console.log('User fragments:', fragments);
-        } catch (error) {
-            console.error('Failed to get fragments:', error);
-        }
+    // try {
+    //   const fragments = await getUserFragments(user);
+    //   console.log('User fragments:', fragments);
+    // } catch (error) {
+    //   console.error('Failed to get fragments:', error);
+    // }
     } else {
         userSection.hidden = true; // Hide user section
         loginBtn.disabled = false;
@@ -702,11 +702,10 @@ async function init() {
 }
 addEventListener('DOMContentLoaded', init);
 
-},{"./auth.js":"88zST","./api.js":"87meq"}],"88zST":[function(require,module,exports,__globalThis) {
+},{"./auth.js":"88zST"}],"88zST":[function(require,module,exports,__globalThis) {
 // src/auth.js
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "userManager", ()=>userManager);
 parcelHelpers.export(exports, "signIn", ()=>signIn);
 parcelHelpers.export(exports, "signOut", ()=>signOut);
 parcelHelpers.export(exports, "getUser", ()=>getUser);
@@ -3936,40 +3935,6 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"87meq":[function(require,module,exports,__globalThis) {
-// src/api.js
-// fragments microservice API to use, defaults to localhost:8080 if not set in env
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-/**
- * Given an authenticated user, request all fragments for this user from the
- * fragments microservice (currently only running locally). We expect a user
- * to have an `idToken` attached, so we can send that along with the request.
- */ parcelHelpers.export(exports, "getUserFragments", ()=>getUserFragments);
-const apiUrl = 'localhost:8080';
-async function getUserFragments(user) {
-    console.log('Requesting user fragments data...');
-    try {
-        const fragmentsUrl = new URL('/v1/fragments', apiUrl);
-        const res = await fetch(fragmentsUrl, {
-            // Generate headers with the proper Authorization bearer token to pass.
-            // We are using the `authorizationHeaders()` helper method we defined
-            // earlier, to automatically attach the user's ID token.
-            headers: user.authorizationHeaders()
-        });
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        const data = await res.json();
-        console.log('Successfully got user fragments data', {
-            data
-        });
-        return data;
-    } catch (err) {
-        console.error('Unable to call GET /v1/fragment', {
-            err
-        });
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["3A3kn","14hXP"], "14hXP", "parcelRequirec284", {})
+},{}]},["3A3kn","14hXP"], "14hXP", "parcelRequirec284", {})
 
 //# sourceMappingURL=fragments-ui.e9ccd0e6.js.map
