@@ -4,6 +4,7 @@ const router = express.Router();
 const { authenticate } = require('../auth');
 
 router.get('/', (req, res) => {
+  res.set('Cache-Control', 'no-cache');
   res.json({
     status: 'ok',
     author,

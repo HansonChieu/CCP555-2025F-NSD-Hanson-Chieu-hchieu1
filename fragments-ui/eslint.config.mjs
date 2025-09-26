@@ -3,6 +3,6 @@ import pluginJs from '@eslint/js';
 
 export default [
   { files: ['**/*.js'], languageOptions: { sourceType: 'module' } },
-  { languageOptions: { globals: {...globals.browser, ...globals.node} } },
+  { languageOptions: { globals: {...globals.browser, ...globals.node, ...globals.jest} } },
   pluginJs.configs.recommended,
 ];
