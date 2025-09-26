@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "Simple web app to manage authentication with our User Pool and test our back-end fragments microservice, using AWS..",
   "scripts": {
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
