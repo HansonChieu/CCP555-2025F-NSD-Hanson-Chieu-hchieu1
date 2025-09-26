@@ -4,29 +4,33 @@
 name: ci
  
 # This workflow will run whenever we push commits to the `main` branch, or
-# whenever there's a pull request to the `main` branch. See:
-# [URL documentation]
+# whenever there's a pull request to the `main` branch, but ONLY when
+# files in the fragments/ directory are changed
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'fragments/**'
   push:
     branches:
       - main
+    paths:
+      - 'fragments/**'
  
 jobs:
-  lint-fragments:
+  lint:
     # Give your job a name that will show up in the GitHub Actions web UI
-    name: ESLint - fragments
+    name: ESLint
     # We'll run this on a Linux (Ubuntu) VM, since we'll deploy on Linux too.
     runs-on: ubuntu-latest
     # We run these steps one after the other, and if any fail, we stop the process
     steps:
-      # [URL documentation]
+      # Check out code
       - name: Check out code
         uses: actions/checkout@v4
  
-      # [URL documentation]
+      # Setup node
       - name: Setup node
         uses: actions/setup-node@v4
         with:
@@ -34,43 +38,16 @@ jobs:
           node-version: 'lts/*'
           # Cache npm dependencies so they don't have to be downloaded next time
           cache: 'npm'
-          cache-dependency-path: './fragments/package-lock.json'
+          # Specify the cache dependency path for the fragments directory
+          cache-dependency-path: fragments/package-lock.json
  
+      # Change to fragments directory and install dependencies
       - name: Install node dependencies
-        # Use `ci` vs. `install`
         working-directory: ./fragments
+        # Use `ci` vs. `install`
         run: npm ci
  
+      # Run ESLint from fragments directory
       - name: Run ESLint
         working-directory: ./fragments
-        run: npm run lint
-
-  lint-fragments-ui:
-    # Give your job a name that will show up in the GitHub Actions web UI
-    name: ESLint - fragments-ui
-    # We'll run this on a Linux (Ubuntu) VM, since we'll deploy on Linux too.
-    runs-on: ubuntu-latest
-    # We run these steps one after the other, and if any fail, we stop the process
-    steps:
-      # [URL documentation]
-      - name: Check out code
-        uses: actions/checkout@v4
- 
-      # [URL documentation]
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          # Use node LTS
-          node-version: 'lts/*'
-          # Cache npm dependencies so they don't have to be downloaded next time
-          cache: 'npm'
-          cache-dependency-path: './fragments-ui/package-lock.json'
- 
-      - name: Install node dependencies
-        # Use `ci` vs. `install`
-        working-directory: ./fragments-ui
-        run: npm ci
- 
-      - name: Run ESLint
-        working-directory: ./fragments-ui
         run: npm run lint
