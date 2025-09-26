@@ -64,18 +64,11 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
-          cache-dependency-path: fragments/package-lock.json
+          cache-dependency-path: package-lock.json
  
+      - name: Install root dependencies
+        run: npm ci
+
       - name: Install node dependencies and run Tests
-      
-        # There are two ways we could do this:
-        #
-        # 1. Call `npm ci` followed by `npm test` like so (NOTE: the use of | and -):
-        # run: |
-        # - npm install
-        # - npm test
-        #
-        # 2. Use `install-ci-test` to do it in a single command, see http://localhost:8080
-        # run: npm install-ci-test
         working-directory: ./fragments
         run: npm install-ci-test
