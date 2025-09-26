@@ -52,7 +52,7 @@ jobs:
         working-directory: ./fragments
         run: npm run lint
 
- unit-tests:
+  unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
