@@ -15,9 +15,9 @@ on:
       - main
  
 jobs:
-  lint:
+  lint-fragments:
     # Give your job a name that will show up in the GitHub Actions web UI
-    name: ESLint
+    name: ESLint - fragments
     # We'll run this on a Linux (Ubuntu) VM, since we'll deploy on Linux too.
     runs-on: ubuntu-latest
     # We run these steps one after the other, and if any fail, we stop the process
@@ -30,14 +30,47 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          # Use node LTS http://localhost:8080
+          # Use node LTS
           node-version: 'lts/*'
-          # Cache npm dependencies so they don't have to be downloaded next time - http://localhost:8080
+          # Cache npm dependencies so they don't have to be downloaded next time
           cache: 'npm'
+          cache-dependency-path: './fragments/package-lock.json'
  
       - name: Install node dependencies
-        # Use `ci` vs. `install`, see http://localhost:8080
+        # Use `ci` vs. `install`
+        working-directory: ./fragments
         run: npm ci
  
       - name: Run ESLint
+        working-directory: ./fragments
+        run: npm run lint
+
+  lint-fragments-ui:
+    # Give your job a name that will show up in the GitHub Actions web UI
+    name: ESLint - fragments-ui
+    # We'll run this on a Linux (Ubuntu) VM, since we'll deploy on Linux too.
+    runs-on: ubuntu-latest
+    # We run these steps one after the other, and if any fail, we stop the process
+    steps:
+      # [URL documentation]
+      - name: Check out code
+        uses: actions/checkout@v4
+ 
+      # [URL documentation]
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          # Use node LTS
+          node-version: 'lts/*'
+          # Cache npm dependencies so they don't have to be downloaded next time
+          cache: 'npm'
+          cache-dependency-path: './fragments-ui/package-lock.json'
+ 
+      - name: Install node dependencies
+        # Use `ci` vs. `install`
+        working-directory: ./fragments-ui
+        run: npm ci
+ 
+      - name: Run ESLint
+        working-directory: ./fragments-ui
         run: npm run lint
