@@ -37,6 +37,9 @@ COPY ./src ./src
 #Copy our HTPASSWD file
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
+# Set the HTPASSWD_FILE environment variable
+ENV HTPASSWD_FILE=./tests/.htpasswd
+
 #Star the container by running our server
 CMD ["npm", "start"]
 
