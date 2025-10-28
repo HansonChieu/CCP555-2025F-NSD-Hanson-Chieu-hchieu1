@@ -1,47 +1,37 @@
-#Dockerfile 
+# -----------------------
+# Stage 1: Build stage
+# -----------------------
+FROM node:22.19.0-alpine AS builder
 
-#Specifies the parent or base image to use as  a starting point for building a new Docker image.
-FROM node
-
-#Use node version 22.19.0
-FROM node:22.19.0
-
-#Key=value pairs with aribitrary metadaata about the image
-LABEL maintainer="Hanson Chieu <hansonchieu@hotmail.com>"
-LABEL description="Fragments node.js microservice"
-
-#Defines evnironment variables that can be used during the build process and at runtime.
-# We default to use port 8080 in our service
-ENV PORT=8080
- 
-# Reduce npm spam when installing within Docker
-# [URL documentation]
-ENV NPM_CONFIG_LOGLEVEL=warn
- 
-# Disable colour when run inside Docker
-# [URL documentation]
-ENV NPM_CONFIG_COLOR=false
-
-#Define the app's working directory
 WORKDIR /app
 
-#Copy package.json and package-lock.json to the working directory
+# Copy only package files first (to leverage caching)
 COPY package*.json ./
 
-#Install node dependencies
-RUN npm install
+# Install dependencies
+RUN npm ci --omit=dev
 
-#Copy src to /app/src
-COPY ./src ./src
+# Copy the rest of the application
+COPY . .
 
-#Copy our HTPASSWD file
-COPY ./tests/.htpasswd ./tests/.htpasswd
+# -----------------------
+# Stage 2: Runtime stage
+# -----------------------
+FROM node:22.19.0-alpine
 
-# Set the HTPASSWD_FILE environment variable
-ENV HTPASSWD_FILE=./tests/.htpasswd
+WORKDIR /app
 
-#Star the container by running our server
-CMD ["npm", "start"]
+# Copy only necessary files from the builder stage
+COPY --from=builder /app /app
 
-#Expose the port that the app runs on
+# Set environment variables
+ENV PORT=8080 \
+    NPM_CONFIG_LOGLEVEL=warn \
+    NPM_CONFIG_COLOR=false \
+    HTPASSWD_FILE=./tests/.htpasswd
+
+# Expose the app port
 EXPOSE 8080
+
+# Start the app
+CMD ["npm", "start"]
