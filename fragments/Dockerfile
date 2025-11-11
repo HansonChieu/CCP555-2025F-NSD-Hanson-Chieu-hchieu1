@@ -36,3 +36,4 @@ EXPOSE 8080
 # Start the app
 CMD ["npm", "start"]
 
+Error Test
