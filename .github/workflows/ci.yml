@@ -63,6 +63,27 @@ jobs:
         with:
           dockerfile: fragments/Dockerfile
 
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+ 
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+ 
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install node dependencies and run Tests
+        working-directory: ./fragments
+        run: npm install-ci-test
+
   docker-hub:
     name: Build and Push to Docker Hub
   # Don't bother running this job unless the other three all pass
@@ -96,24 +117,3 @@ jobs:
           push: true
           # Use 3 tags :sha-sha-7d821bd14e0d6c381dc57a5369ae1a3a9220664f, :main, and :latest
           tags: ${{ env.DOCKERHUB_REPO }}:${{ env.SHA_TAG }}, ${{ env.DOCKERHUB_REPO }}:main, ${{ env.DOCKERHUB_REPO }}:latest
-
-  unit-tests:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
- 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
- 
-      - name: Install root dependencies
-        run: npm ci
-
-      - name: Install node dependencies and run Tests
-        working-directory: ./fragments
-        run: npm install-ci-test
