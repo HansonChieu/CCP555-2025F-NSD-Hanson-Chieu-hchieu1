@@ -10,7 +10,10 @@ const logger = require('./logger');
 const app = express();
 
 // Use CORS middleware so we can make requests across origins
-app.use(cors());
+app.use(cors({ 
+  origin: '*',
+  exposedHeaders: ['Location'],
+}));
 
 passport.use(require('./auth').strategy());
 app.use(passport.initialize());
