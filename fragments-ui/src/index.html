@@ -3,18 +3,197 @@
   <head>
     <meta charset="utf-8" />
     <title>Fragments UI</title>
-    <script type="module" src="app.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      h1 {
+        color: #333;
+      }
+      
+      .container {
+        margin: 20px 0;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      
+      select, textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      
+      textarea {
+        font-family: monospace;
+        min-height: 100px;
+      }
+      
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      
+      button:hover {
+        background-color: #0056b3;
+      }
+      
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      
+      #logout {
+        background-color: #dc3545;
+      }
+      
+      #logout:hover {
+        background-color: #c82333;
+      }
+      
+      .result {
+        padding: 10px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+      }
+      
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      
+      .fragment-id {
+        font-family: monospace;
+        font-size: 12px;
+      }
+      
+      .hidden {
+        display: none;
+      }
+      
+      .location-header {
+        font-family: monospace;
+        font-size: 12px;
+        background-color: #f8f9fa;
+        padding: 5px;
+        border-radius: 3px;
+        word-break: break-all;
+      }
+    </style>
   </head>
   <body>
     <h1>Fragments UI</h1>
-    <section>
-      <nav>
-        <button id="login">Login</button>
-      </nav>
+    
+    <!-- Login Section -->
+    <section id="loginSection">
+      <div class="container">
+        <button id="login">Login with Cognito</button>
+      </div>
     </section>
-    <section hidden id="user">
-      <h2>Hello <span class="username"></span>!</h2>
+    
+    <!-- User Section (shown after login) -->
+    <section id="userSection" class="hidden">
+      <div class="container">
+        <h2>Welcome, <span id="username"></span>!</h2>
+        
+        <!-- Create Fragment Form -->
+        <div class="container">
+          <h3>Create New Fragment</h3>
+          <form id="fragmentForm">
+            <div class="form-group">
+              <label for="fragmentType">Fragment Type:</label>
+              <select id="fragmentType" required>
+                <option value="text/plain">Text (Plain)</option>
+                <option value="text/markdown">Text (Markdown)</option>
+                <option value="text/html">Text (HTML)</option>
+                <option value="text/csv">Text (CSV)</option>
+                <option value="application/json">Application (JSON)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="fragmentContent">Content:</label>
+              <textarea 
+                id="fragmentContent" 
+                placeholder="Enter your fragment content here..." 
+                rows="6" 
+                required
+              ></textarea>
+            </div>
+            
+            <button type="submit">Create Fragment</button>
+          </form>
+          
+          <div id="createResult"></div>
+        </div>
+        
+        <!-- Fragments List -->
+        <div class="container">
+          <h3>My Fragments</h3>
+          <button id="refreshFragments">Refresh List</button>
+          <div id="fragmentsResult"></div>
+          <div id="fragmentsList"></div>
+        </div>
+        
+        <!-- Logout Button -->
+        <div class="container">
+          <button id="logout">Logout</button>
+        </div>
+      </div>
     </section>
+
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
-

@@ -1,0 +1,30 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Build outputs
+dist
+.parcel-cache
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Environment files (don't include in Docker - configure in container)
+.env
+.env.local
+.env.*.local
