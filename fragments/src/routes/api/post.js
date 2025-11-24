@@ -37,8 +37,9 @@ module.exports = async (req, res) => {
     logger.debug(`Saved Fragment ID: ${fragment.id}`);
     await fragment.setData(data);
 
-    const apiUrl = process.env.API_URL || `${req.protocol}://${req.headers.host}`;
-    const location = `${apiUrl}/v1/fragments/${fragment.id}`;
+   const apiUrl = process.env.API_URL;
+   const location = `${apiUrl}/v1/fragments/${fragment.id}`;
+
 
     res.setHeader('Location', location);
     res.status(201).json({
