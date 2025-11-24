@@ -16,27 +16,36 @@ module.exports = async (req, res) => {
       logger.warn('Unsupported Media Type received');
       return res.status(415).json({ 
         status: 'error',
-        error: { message: 'Unsupported Media Type' } 
+        error: 'Unsupported Media Type',
       });
     }
 
     // Get content type from header
     const contentTypeHeader = req.headers['content-type'];
     logger.debug(`Content-Type: ${contentTypeHeader}`);
-    
+    if (!Fragment.isSupportedType(contentTypeHeader)) {
+      logger.warn(`Unsupported Media Type: ${contentTypeHeader}`);
+      return res.status(415).json({
+        status: 'error',
+        error: 'Unsupported Media Type',
+      });
+    }
+
     // Create new fragment
     const fragment = new Fragment({
       ownerId: req.user,
       type: contentTypeHeader,
+      size: req.body.length,
     });
     
     // Save the data
+    await fragment.save();
     await fragment.setData(req.body);
     
     logger.info(`Fragment created successfully: ${fragment.id}`);
     
     // Build Location URL
-    const apiUrl = process.env.API_URL || `http://${req.headers.host}`;
+    const apiUrl = process.env.API_URL || `${req.protocol}://${req.get('host')}`;
     const location = `${apiUrl}/v1/fragments/${fragment.id}`;
     
     // Send response
@@ -57,7 +66,7 @@ module.exports = async (req, res) => {
     logger.error('Error creating fragment:', error);
     res.status(500).json({ 
       status: 'error',
-      error: { message: 'Failed to create fragment' } 
+      error:  'Failed to create fragment',  
     });
   }
 };

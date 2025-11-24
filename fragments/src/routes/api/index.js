@@ -1,14 +1,11 @@
 // src/routes/api/index.js
- 
-/**
- * The main entry-point for the v1 version of the fragments API.
- */
+
 const express = require('express');
 const contentType = require('content-type');
 const { Fragment } = require('../../model/fragment');
-const { getById } = require('./get');
- 
-// Create a router on which to mount our API endpoints
+const fragmentGet = require('./get'); // Import the whole module
+const fragmentPost = require('./post');
+
 const router = express.Router();
 
 const rawBody = () =>
@@ -16,19 +13,21 @@ const rawBody = () =>
     inflate: true,
     limit: '5mb',
     type: (req) => {
-      // See if we can parse this content type. If we can, `req.body` will be
-      // a Buffer (e.g., `Buffer.isBuffer(req.body) === true`). If not, `req.body`
-      // will be equal to an empty Object `{}` and `Buffer.isBuffer(req.body) === false`
       const { type } = contentType.parse(req);
       return Fragment.isSupportedType(type);
     },
   });
- 
-// Define our first route, which will be: GET /v1/fragments
-router.get('/fragments', require('./get'));
-router.get('/fragments/:id', getById);
-// Other routes (POST, DELETE, etc.) will go here later on...
-// POST /v1/fragments
-router.post('/fragments', rawBody(), require('./post'));
- 
+
+// GET /fragments (List)
+router.get('/fragments', fragmentGet.getAll);
+
+// GET /fragments/:id/info (Metadata only)
+router.get('/fragments/:id/info', fragmentGet.getInfo);
+
+// GET /fragments/:id (Data with optional conversion)
+router.get('/fragments/:id', fragmentGet.getById);
+
+// POST /fragments
+router.post('/fragments', rawBody(), fragmentPost);
+
 module.exports = router;

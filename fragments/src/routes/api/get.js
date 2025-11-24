@@ -1,19 +1,44 @@
 // src/routes/api/get.js
-const { createErrorResponse } = require('../../response');
+
 const { Fragment } = require('../../model/fragment');
-const MarkdownIt = require('markdown-it');
-const md = new MarkdownIt();
+const logger = require('../../logger');
+const md = require('markdown-it')();
+const path = require('path'); 
 
 /**
  * Get a list of fragments for the current user
  */
-module.exports = (req, res) => {
-  // TODO: this is just a placeholder. To get something working, return an empty array...
-  res.status(200).json({
-    status: 'ok',
-    // TODO: change me
-    fragments: [],
-  });
+module.exports.getAll = async (req, res) => {
+  try {
+    // Check if we should expand the fragments to include full metadata
+    const expand = req.query.expand === '1';
+    
+    // Fetch fragments for the authenticated user
+    const fragments = await Fragment.byUser(req.user, expand);
+    
+    res.status(200).json({
+      status: 'ok',
+      fragments,
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', error: error.message });
+  }
+};
+
+/**
+ * Get a specific fragment's metadata (no data)
+ */
+module.exports.getInfo = async (req, res) => {
+  try {
+    const fragment = await Fragment.byId(req.user, req.params.id);
+    res.status(200).json({
+      status: 'ok',
+      fragment,
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(404).json({ status: 'error', error: 'Fragment not found' });
+  }
 };
 
 /**
@@ -21,45 +46,56 @@ module.exports = (req, res) => {
  */
 module.exports.getById = async (req, res) => {
   try {
-    const { id } = req.params;
+    // Use path.parse to safely separate the ID and the extension
+    // e.g., "1234.html" -> name="1234", ext=".html"
+    const { name: id, ext } = path.parse(req.params.id);
     
-    // Parse the id to check if it includes an extension
-    const parts = id.split('.');
-    let fragmentId = id;
-    let requestedExt = null;
+    // Fetch the fragment by the ID (without extension)
+    const fragment = await Fragment.byId(req.user, id);
     
-    if (parts.length > 1) {
-      requestedExt = parts.pop();
-      fragmentId = parts.join('.');
-    }
+    // Get the raw content (Buffer)
+    const data = await fragment.getData();
     
-    // Fetch the fragment
-    const fragment = await Fragment.byId(req.user, fragmentId);
-    
-    if (!fragment) {
-      return res.status(404).json(createErrorResponse(404, 'Fragment not found'));
-    }
-    
-    // Get the fragment data
-    let data = await fragment.getData();
-    let contentType = fragment.type;
-    
-    // Handle conversion if extension is specified
-    if (requestedExt) {
-      if (fragment.type === 'text/markdown' && requestedExt === 'html') {
-        data = md.render(data.toString());
-        contentType = 'text/html';
-      } else if (!fragment.formats.includes(requestedExt)) {
-        return res.status(415).json(
-          createErrorResponse(415, 'Unsupported conversion type')
-        );
+    // If an extension was provided, we might need to convert
+    if (ext) {
+      // 1. Handle Markdown -> HTML conversion
+      if (fragment.type === 'text/markdown' && ext === '.html') {
+        const html = md.render(data.toString());
+        res.setHeader('Content-Type', 'text/html');
+        return res.status(200).send(html);
       }
+
+      // 2. If the extension matches the current type (e.g. .json for application/json), just return it
+      // We check if the requested extension maps to the fragment's mime type
+      // (This logic can be expanded in Assignment 3)
+
+      const extToType = {
+        '.txt': 'text/plain',
+        '.md': 'text/markdown',
+        '.html': 'text/html',
+        '.json': 'application/json'
+      };
+  
+      if (extToType[ext] === fragment.mimeType) {
+        res.setHeader('Content-Type', fragment.type);
+      return res.status(200).send(data);
+      }
+
+      
+      // If we don't support the conversion, return 415
+      return res.status(415).json({ 
+        status: 'error', 
+        error: `Conversion to ${ext} not supported` 
+      });
     }
-    
-    res.setHeader('Content-Type', contentType);
+
+    // No extension provided: serve the raw data with original content type
+    res.setHeader('Content-Type', fragment.type);
+    res.setHeader('Content-Length', fragment.size);
     res.status(200).send(data);
     
   } catch (error) {
-    res.status(500).json(createErrorResponse(500, error.message));
+    logger.error(error);
+    res.status(404).json({ status: 'error', error: 'Fragment not found' });
   }
 };
