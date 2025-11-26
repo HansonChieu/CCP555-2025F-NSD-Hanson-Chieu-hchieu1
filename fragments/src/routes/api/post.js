@@ -6,29 +6,35 @@ const logger = require('../../logger');
 module.exports = async (req, res) => {
   try {
     logger.info('POST /v1/fragments - Creating new fragment');
+    logger.debug('req.body type:', typeof req.body);
+    logger.debug('req.body:', req.body);
 
     // Ensure request body is a Buffer
     let data = req.body;
     if (!Buffer.isBuffer(data)) {
+      logger.debug('Converting body to Buffer');
       data = Buffer.from(req.body);
     }
+    logger.debug('Data buffer created successfully');
 
-    // Normalize the Content-Type header
-    const contentTypeHeader = req.get('Content-Type')?.split(';')[0].trim();
-    if (!contentTypeHeader) return res.status(400).json({ error: 'Content-Type required' });
-    logger.debug(`Content-Type: ${contentTypeHeader}`);
+ // Get full and normalized content types
+const fullContentType = req.get('Content-Type') || '';
+const normalizedContentType = fullContentType.split(';')[0].trim();
 
-    if (!Fragment.isSupportedType(contentTypeHeader)) {
-      return res.status(415).json({
-        status: 'error',
-        error: 'Unsupported Media Type',
-      });
-    }
+if (!normalizedContentType) return res.status(400).json({ error: 'Content-Type required' });
+
+// Use normalized for validation
+if (!Fragment.isSupportedType(normalizedContentType)) {
+  return res.status(415).json({
+    status: 'error',
+    error: 'Unsupported Media Type',
+  });
+}
 
     // Create the fragment metadata
     const fragment = new Fragment({
       ownerId: req.user,
-      type: contentTypeHeader,
+      type: fullContentType,
       size: data.length,
     });
 

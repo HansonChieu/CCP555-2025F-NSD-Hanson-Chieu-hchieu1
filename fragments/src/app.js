@@ -21,7 +21,16 @@ app.use(passport.initialize());
 //Use gzip/deflate compression middleware
 app.use(compression());
 
-app.use(express.raw({ type: '*/*' }));
+// Add body parsing middleware - IMPORTANT: Add this before routes!
+// Parse all content types as raw Buffer data
+app.use('/v1/fragments', express.raw({ 
+  type: '*/*',  // Accept any content type
+  limit: '5mb'  // Set size limit
+}));
+
+// You might also want these for other routes if needed:
+// app.use(express.json()); // for application/json
+// app.use(express.text({ type: 'text/*' })); // for text/* types
 
 app.use('/', require('./routes'));
 

@@ -1,0 +1,285 @@
+[33mcommit 36f27de94655380a6629c1ef96347801e7d12469[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 19:53:53 2025 -0500
+
+    Revert back to 0.0.1 for test
+
+[33mcommit bac379f63474c21acc616b151ef6646dc2b70748[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 19:49:28 2025 -0500
+
+    Fix CD workflow
+
+[33mcommit af42eef3f2a7d6bdcda96ec9eca08f4171b9b6a7[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 19:42:31 2025 -0500
+
+    Prepare for release
+
+[33mcommit d428058bd881b7161239f5bb69a641e351f89169[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 19:38:36 2025 -0500
+
+    Fixed indentation
+
+[33mcommit 42b6798c046c778fc9709d643e06aa7fee5861f4[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 19:28:49 2025 -0500
+
+    Created cd.yml
+
+[33mcommit a923517686b413d48d0aa12d7f4dbc8adf58ce64[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:16:12 2025 -0500
+
+    Removed error
+
+[33mcommit 7944c1ad00979cdcfac65e03b9e37164a3f57f3c[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:15:46 2025 -0500
+
+    Added error
+
+[33mcommit c2ee27072ee71749228e3b42835e6e8ac9fb367f[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:15:13 2025 -0500
+
+    Added check out
+
+[33mcommit 8baf093251c15158146810eb2d04493e0d78efca[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:09:20 2025 -0500
+
+    Removed error
+
+[33mcommit 9af54125839eea58c46b5dff02ecdded43629f7c[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:08:50 2025 -0500
+
+    Added error
+
+[33mcommit 686b18b03bfdb20d5fcc4837a9543dafd574826d[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:08:06 2025 -0500
+
+    Added context
+
+[33mcommit 733224361d410c44ba1505f9bb7fcd38f39cf6dc[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:02:34 2025 -0500
+
+    Fixed error
+
+[33mcommit bd8142810dd8c300df4976c4bec7f6c253ca519d[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:02:08 2025 -0500
+
+    Added error
+
+[33mcommit 9da74a7df0ce6591a6a2a07b0e639a7aa4690dc5[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 11:01:35 2025 -0500
+
+    Added context
+
+[33mcommit 82eaf28083bdfb86971f6940511012d77b2582b6[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:59:02 2025 -0500
+
+    Removed error
+
+[33mcommit e432dcc97f47dcbaa6ee9f109cb30dd13b8f2335[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:58:01 2025 -0500
+
+    Added error
+
+[33mcommit 54098fbe8365e1d2701386a6003ababcb3d6f757[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:54:31 2025 -0500
+
+    Fixed ordering
+
+[33mcommit df1c71260ad5e0c31da015d2f4bacf175a071170[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:50:42 2025 -0500
+
+    Fixed proper indentation
+
+[33mcommit 5d8123c952863ffea74c6856d45849414ea94718[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:49:13 2025 -0500
+
+    Fixed proper indentation
+
+[33mcommit ca625ca7dfd2c871e12ac8ea41edbbe3241b0791[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:46:49 2025 -0500
+
+    Fixed proper indentation
+
+[33mcommit 13fa8e52f5366154d299aade18eb98e30bccdb17[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Wed Nov 12 10:43:48 2025 -0500
+
+    Added step to build and push an image to Docker Hub
+
+[33mcommit 1cc9f61d9e2ea5cb52b7272477ff695f8fc7aba6[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:19:38 2025 -0500
+
+    Fixed error
+
+[33mcommit e45c863d8d5db46b97f1d0acc4a55e95afec943b[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:18:42 2025 -0500
+
+    Added error for change
+
+[33mcommit 4da853aff988e95154d8afa5f6cf7b6c15b58506[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:18:02 2025 -0500
+
+    Fixed Hadolint path to Dockerfile
+
+[33mcommit 0734f21cccc4b29739063a782e2e19e308e9d330[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:14:18 2025 -0500
+
+    Fixed error
+
+[33mcommit efa58a8f406b5abc75da35063a037993b9a6b8e7[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:13:05 2025 -0500
+
+    Added error for change
+
+[33mcommit 07b068e59fc0b37aa4e499b70fcc5b77223acc7f[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Nov 11 08:11:27 2025 -0500
+
+    Installed Hadolint and updated to lint Dockerfile using Hadolint
+
+[33mcommit f1fc29ca76aab6d63c281d912bdde34cdfb37a1d[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Oct 28 19:46:20 2025 -0400
+
+    Added get fragment by id
+
+[33mcommit 5892b2f7f7e5c323656a9ff3ff7cde9d3b40bf63[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Tue Oct 28 19:23:08 2025 -0400
+
+    Optimized Dockerfile with multi-stage build
+
+[33mcommit d4495203cb8a251450836c5521d4f841bf49ee94[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Mon Oct 27 20:47:43 2025 -0400
+
+    Fixed Dockerfile
+
+[33mcommit 48d8362c7aa50720f9064acc655d0906476a85d9[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Mon Oct 27 15:42:37 2025 -0400
+
+    Added dockerfile
+
+[33mcommit 65f9b997e3837a55653b85eb1585477477765be8[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Oct 10 19:19:24 2025 -0400
+
+    Added required unit tests for assignment 1
+
+[33mcommit 337a3e7518871eb734e0cfe78901b22837b7594f[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:38:12 2025 -0400
+
+    Fixed unit test
+
+[33mcommit aace9410c2954ca77609367af1e33783f017b48f[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:37:33 2025 -0400
+
+    Comment out unit test
+
+[33mcommit c1f166f7045acd9329ebb6e6d59b722899ad0f65[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:34:17 2025 -0400
+
+    Fixed correct path  to .htpasswd
+
+[33mcommit 28d294e55b3ff5553c758a1688c2698afb9e47d5[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:32:32 2025 -0400
+
+    Add .htpasswd file
+
+[33mcommit 6952f34b07889abfebdca80320daa4b35eb01730[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:29:08 2025 -0400
+
+    Fixed unit test
+
+[33mcommit 609b9048488851f5311c69f1ac184ab0fca51fa2[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:28:28 2025 -0400
+
+    Comment out unit test
+
+[33mcommit a157be6346fa22c016abc986a594acd95b565f44[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:27:45 2025 -0400
+
+    Fixed correct path  to .htpasswd
+
+[33mcommit bcecf11b2b102c5a41da2f600bfebb7348c6dfb9[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:24:45 2025 -0400
+
+    Fixed unit test
+
+[33mcommit ad4f8a032f618829c5ff4f7dfffdbdbf47d0c88a[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:24:03 2025 -0400
+
+    Comment out unit test
+
+[33mcommit 25d1bfcb0cfe374086711c5fa5bab87a5bb8a59d[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:22:19 2025 -0400
+
+    Attempt to fix ci
+
+[33mcommit f51abdf45889bdb614fa1691a2d0fffb7564378c[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:15:26 2025 -0400
+
+    Fixed unit test
+
+[33mcommit 8a44ec1f2e78ac972d916fffcee85069ecae9c88[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:08:03 2025 -0400
+
+    Commented out unit tests to fail
+
+[33mcommit c9512586c2a004533d37f0dd54c19bd3519b5a8e[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 01:05:43 2025 -0400
+
+    Fixed ci due to poor indentation
+
+[33mcommit 068ce4e90947516eead435af1d3aeb32224d6345[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 00:55:08 2025 -0400
+
+    Removed error line
+
+[33mcommit 2bacbd825220794b6efed5ca49197b46e88bbf37[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   Fri Sep 26 00:54:02 2025 -0400
+
+    Add error line
+
+[33mcommit a5d7945696feab581cc9de0ce2b0f8c8f1001abd[m
+Author: Hanson Chieu <hansonchieu@hotmail.com>
+Date:   

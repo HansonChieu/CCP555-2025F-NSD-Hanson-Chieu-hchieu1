@@ -23,8 +23,3 @@ Thumbs.db
 # Documentation
 README.md
 *.md
-
-# Environment files (don't include in Docker - configure in container)
-.env
-.env.local
-.env.*.local

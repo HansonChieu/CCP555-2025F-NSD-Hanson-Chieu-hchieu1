@@ -119,8 +119,7 @@ async function init() {
         });
 
         const data = await response.json();
-        
-        // Capture the Location header for the screenshot requirement!
+      
         const locationHeader = response.headers.get('Location');
 
         if (response.ok) {

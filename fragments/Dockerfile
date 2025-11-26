@@ -28,7 +28,7 @@ COPY --from=builder /app /app
 ENV PORT=8080 \
     NPM_CONFIG_LOGLEVEL=warn \
     NPM_CONFIG_COLOR=false \
-    HTPASSWD_FILE=./tests/.htpasswd
+    HTPASSWD_FILE=./.htpasswd
 
 # Expose the app port
 EXPOSE 8080

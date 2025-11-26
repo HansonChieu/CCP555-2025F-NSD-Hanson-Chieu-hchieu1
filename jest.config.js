@@ -25,5 +25,6 @@ module.exports = {
   // Ensure node_modules is ignored
   testPathIgnorePatterns: [
     '/node_modules/'
-  ]
+  ],
+  
 };

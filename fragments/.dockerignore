@@ -3,7 +3,7 @@
     coverage/
     node_modules/
     tests/
-    !tests/.htpasswd
+    !.htpasswd
     .env
     eslint.config.mjs
     .git/
