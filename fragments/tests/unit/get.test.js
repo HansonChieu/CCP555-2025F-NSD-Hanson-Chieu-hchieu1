@@ -3,21 +3,51 @@ const request = require('supertest');
 const app = require('../../src/app');
 
 jest.mock('@aws-sdk/client-s3', () => {
+  const { Readable } = require('stream');
+  // Create a simple in-memory "bucket" to store data during tests
+  const bucket = new Map();
+
   return {
     S3Client: jest.fn(() => ({
-      send: jest.fn().mockImplementation(() => {
-        // Mock a successful response. 
-        // For GetObjectCommand, return a stream with "hello" (matches test data)
-        const { Readable } = require('stream');
-        const s = new Readable();
-        s.push('hello'); 
-        s.push(null);
-        return Promise.resolve({ Body: s });
+      send: jest.fn().mockImplementation((command) => {
+        // 1. Handle PutObjectCommand (Upload)
+        // Check if the command has the 'input' property we added in the class mock below
+        if (command.constructor.name === 'PutObjectCommand') {
+          const { Key, Body } = command.input;
+          bucket.set(Key, Body);
+          return Promise.resolve({});
+        }
+
+        // 2. Handle GetObjectCommand (Download)
+        if (command.constructor.name === 'GetObjectCommand') {
+          const { Key } = command.input;
+          const data = bucket.get(Key);
+          
+          if (!data) {
+            return Promise.reject(new Error('NoSuchKey'));
+          }
+
+          const s = new Readable();
+          s.push(data);
+          s.push(null);
+          return Promise.resolve({ Body: s });
+        }
+        
+        // 3. Handle DeleteObjectCommand
+        if (command.constructor.name === 'DeleteObjectCommand') {
+            const { Key } = command.input;
+            bucket.delete(Key);
+            return Promise.resolve({});
+        }
+
+        return Promise.resolve({});
       }),
     })),
-    PutObjectCommand: jest.fn(),
-    GetObjectCommand: jest.fn(),
-    DeleteObjectCommand: jest.fn(),
+    // Mock the Commands as classes that store their input arguments
+    // This allows us to access the 'Key' and 'Body' inside the 'send' function above
+    PutObjectCommand: class { constructor(input) { this.input = input; } },
+    GetObjectCommand: class { constructor(input) { this.input = input; } },
+    DeleteObjectCommand: class { constructor(input) { this.input = input; } },
   };
 });
 
