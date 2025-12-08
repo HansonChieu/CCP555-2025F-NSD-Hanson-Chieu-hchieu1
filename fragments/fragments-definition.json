@@ -1,0 +1,45 @@
+{
+  "family": "fragments-task",
+  "containerDefinitions": [
+    {
+      "name": "fragments",
+      "image": "fragments",
+      "essential": true,
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "AWS_S3_BUCKET_NAME",
+          "value": "hanson.chieu-fragments"
+        },
+        {
+          "name": "API_URL",
+          "value": "http://localhost:8080"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fragments-task",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::730335263529:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::730335263529:role/LabRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512"
+}
