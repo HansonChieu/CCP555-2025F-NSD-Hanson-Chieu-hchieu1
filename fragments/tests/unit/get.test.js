@@ -2,6 +2,25 @@
 const request = require('supertest');
 const app = require('../../src/app');
 
+jest.mock('@aws-sdk/client-s3', () => {
+  return {
+    S3Client: jest.fn(() => ({
+      send: jest.fn().mockImplementation(() => {
+        // Mock a successful response. 
+        // For GetObjectCommand, return a stream with "hello" (matches test data)
+        const { Readable } = require('stream');
+        const s = new Readable();
+        s.push('hello'); 
+        s.push(null);
+        return Promise.resolve({ Body: s });
+      }),
+    })),
+    PutObjectCommand: jest.fn(),
+    GetObjectCommand: jest.fn(),
+    DeleteObjectCommand: jest.fn(),
+  };
+});
+
 describe('GET /v1/fragments', () => {
   test('unauthenticated requests are denied', () => 
     request(app).get('/v1/fragments').expect(401));

@@ -1,5 +1,23 @@
 const { Fragment } = require('../../src/model/fragment');
 
+jest.mock('@aws-sdk/client-s3', () => {
+  return {
+    S3Client: jest.fn(() => ({
+      send: jest.fn().mockImplementation(() => {
+        // Mock a successful response. 
+        // For GetObjectCommand, return a stream with "hello" (matches test data)
+        const { Readable } = require('stream');
+        const s = new Readable();
+        s.push('hello'); 
+        s.push(null);
+        return Promise.resolve({ Body: s });
+      }),
+    })),
+    PutObjectCommand: jest.fn(),
+    GetObjectCommand: jest.fn(),
+    DeleteObjectCommand: jest.fn(),
+  };
+});
 // Wait for a certain number of ms (default 50). Feel free to change this value
 // if it isn't long enough for your test runs. Returns a Promise.
 const wait = async (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
