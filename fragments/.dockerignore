@@ -4,6 +4,7 @@
     node_modules/
     tests/
     !.htpasswd
+    debug.env
     .env
     eslint.config.mjs
     .git/
