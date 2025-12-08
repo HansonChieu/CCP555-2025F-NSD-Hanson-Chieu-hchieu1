@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "fragments",
-      "image": "fragments",
+      "image": "730335263529.dkr.ecr.us-east-1.amazonaws.com/fragments:v0.7.1",
       "essential": true,
       "memory": 512,
       "cpu": 256,

@@ -1,5 +1,5 @@
 // src/server.js
-require('dotenv').config({ path: './debug.env' });
+require('dotenv').config({ path: '.env' });
 
 // We want to gracefully shutdown our server
 const stoppable = require('stoppable');

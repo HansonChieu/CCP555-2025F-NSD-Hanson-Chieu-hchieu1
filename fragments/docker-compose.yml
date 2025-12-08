@@ -5,7 +5,7 @@ services:
     build: .
     environment:
       - API_URL=http://localhost:8080
-      - HTPASSWD_FILE=./.htpasswd
+      #- HTPASSWD_FILE=./.htpasswd
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - AWS_REGION=us-east-1
       
