@@ -56,3 +56,36 @@ export async function deleteFragment(user, id) {
     throw err; // Re-throw so the UI can handle the error
   }
 }
+
+/**
+ * Updates a fragment's data.
+ */
+export async function updateFragment(user, id, newData) {
+  console.log(`Updating fragment ${id}...`);
+  try {
+    const url = `${apiUrl}/v1/fragments/${id}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        // We reuse the existing auth headers
+        ...user.authorizationHeaders(),
+        // We need to set the type, or let the browser set it? 
+        // For text updates, usually text/plain is fine.
+        // For simplicity in this assignment, we'll assume text updates for now.
+        'Content-Type': 'text/plain', 
+      },
+      body: newData
+    });
+
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log('Successfully updated fragment', { data });
+    return data;
+  } catch (err) {
+    console.error('Unable to call PUT /v1/fragments/:id', { err });
+    throw err;
+  }
+}

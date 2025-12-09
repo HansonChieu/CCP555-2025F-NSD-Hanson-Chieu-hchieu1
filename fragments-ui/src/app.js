@@ -1,13 +1,14 @@
-// app.js
+// src/app.js
 import { signIn, getUser, signOut } from './auth.js';
-import { getUserFragments, deleteFragment } from './api.js';
-
+// Import updateFragment along with the others
+import { getUserFragments, deleteFragment, updateFragment } from './api.js';
 
 async function displayFragments(user) {
   const fragmentsListDiv = document.querySelector('#fragmentsList');
   const fragmentsResultDiv = document.querySelector('#fragmentsResult');
 
   try {
+    // Get fragments with expand=1 to get full metadata
     const data = await getUserFragments(user, true);
 
     if (!data || !data.fragments || data.fragments.length === 0) {
@@ -15,6 +16,7 @@ async function displayFragments(user) {
       return;
     }
 
+    // Create table to display fragments
     const table = document.createElement('table');
     table.innerHTML = `
       <thead>
@@ -24,7 +26,8 @@ async function displayFragments(user) {
           <th>Size</th>
           <th>Created</th>
           <th>Updated</th>
-          <th>Actions</th> </tr>
+          <th>Actions</th>
+        </tr>
       </thead>
       <tbody>
         ${data.fragments.map(fragment => `
@@ -35,6 +38,7 @@ async function displayFragments(user) {
             <td>${new Date(fragment.created).toLocaleString()}</td>
             <td>${new Date(fragment.updated).toLocaleString()}</td>
             <td>
+              <button class="update-btn" data-id="${fragment.id}">Update</button>
               <button class="delete-btn" data-id="${fragment.id}">Delete</button>
             </td>
           </tr>
@@ -46,6 +50,7 @@ async function displayFragments(user) {
     fragmentsListDiv.innerHTML = '';
     fragmentsListDiv.appendChild(table);
 
+    // 2. Attach DELETE Event Listeners
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = e.target.dataset.id;
@@ -56,6 +61,25 @@ async function displayFragments(user) {
           } catch (err) {
             console.error('Delete failed', err);
             alert('Failed to delete fragment');
+          }
+        }
+      });
+    });
+
+    // 3. Attach UPDATE Event Listeners
+    document.querySelectorAll('.update-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.dataset.id;
+        // Prompt user for new content (simple UI for assignment purposes)
+        const newContent = prompt('Enter new content for this fragment:');
+        
+        if (newContent !== null) { // If user didn't cancel
+          try {
+            await updateFragment(user, id, newContent);
+            await displayFragments(user); // Refresh list to show updated timestamp/size
+          } catch (err) {
+            console.error('Update failed', err);
+            alert('Failed to update fragment: ' + err.message);
           }
         }
       });
@@ -144,7 +168,7 @@ async function init() {
           createResultDiv.innerHTML = `
             <div class="result success">
                Fragment created successfully!<br>
-              <strong>ID:</strong> <span  class="fragment-id">${data.fragment.id}</span><br>
+              <strong>ID:</strong> <span class="fragment-id">${data.fragment.id}</span><br>
               <strong>Type:</strong> ${data.fragment.type}<br>
               <strong>Size:</strong> ${data.fragment.size} bytes<br>
               ${locationHeader ? `<strong>Location:</strong> <div class="location-header">${locationHeader}</div>` : ''}
