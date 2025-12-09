@@ -57,6 +57,6 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           # IMPORTANT: These names must match what you create in Step 2 below
-          service: fragments-service
+          service: fragments-task
           cluster: fragments-cluster
           wait-for-service-stability: true
