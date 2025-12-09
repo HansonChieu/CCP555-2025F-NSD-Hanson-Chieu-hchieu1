@@ -26,6 +26,14 @@
         {
           "name": "AWS_DYNAMODB_TABLE_NAME",
           "value": "fragments"
+        },
+        {
+          "name": "AWS_COGNITO_POOL_ID",
+          "value": "us-east-1_oCHIy6UWP"
+        },
+        {
+            "name": "AWS_COGNITO_CLIENT_ID",
+            "value": "5trechk434g6ej7ob246skgbn7"
         }
       ],
       "logConfiguration": {

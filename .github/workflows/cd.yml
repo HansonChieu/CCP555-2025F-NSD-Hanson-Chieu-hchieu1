@@ -20,6 +20,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -33,15 +36,27 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./fragments
-          file: ./fragments/Dockerfile  
+          file: ./fragments/Dockerfile
           push: true
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }},
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+
+      # --- NEW STEPS BELOW ---
+      
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          aws-region: us-east-1
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          task-definition: fragments/fragments-definition.json
+          container-name: fragments
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          # IMPORTANT: These names must match what you create in Step 2 below
+          service: fragments-service
+          cluster: fragments-cluster
+          wait-for-service-stability: true
