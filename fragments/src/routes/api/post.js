@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     let data = req.body;
     if (!Buffer.isBuffer(data)) {
       logger.debug('Converting body to Buffer');
-      data = Buffer.from(req.body);
+      data = Buffer.from(req.body || '');
     }
     logger.debug('Data buffer created successfully');
 
@@ -60,7 +60,7 @@ if (!Fragment.isSupportedType(normalizedContentType)) {
       },
     });
   } catch (err) {
-    logger.error('Error creating fragment:', err);
+    logger.error({ err }, 'Error creating fragment in POST handler');
     res.status(500).json({
       status: 'error',
       error: 'Failed to create fragment',
