@@ -137,7 +137,7 @@ jobs:
         run: npm install
       - name: Build Containers
         working-directory: ./fragments
-        run: docker compose up --build -d
+        run: docker compose up -d
       - name: Check Docker Compose service status
         run: docker compose ps
       - name: Setup Local AWS Resources
