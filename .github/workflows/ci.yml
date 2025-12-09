@@ -151,6 +151,10 @@ jobs:
       - name: Run Hurl Tests
         working-directory: ./fragments
         run: npm run test:integration
+      - name: Docker Logs
+        if: failure()
+        working-directory: ./fragments
+        run: docker compose logs fragments
 
 
   
