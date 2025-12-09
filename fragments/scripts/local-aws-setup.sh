@@ -30,6 +30,9 @@ until (curl http://localhost:8000 > /dev/null 2>&1); do
 done
 echo 'DynamoDB-Local Ready'
 
+# Create DynamoDB Table
+echo "Creating DynamoDB-Local DynamoDB table: fragments"
+
 # Create S3 bucket
 echo "Creating LocalStack S3 bucket: fragments"
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket fragments
