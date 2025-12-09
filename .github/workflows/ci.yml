@@ -138,8 +138,6 @@ jobs:
       - name: Build Containers
         working-directory: ./fragments
         run: docker compose up -d
-      - name: Check Docker Compose service status
-        run: docker compose ps
       - name: Setup Local AWS Resources
         working-directory: ./fragments 
       # NOTE: this file needs to be made executable *before* you check into git:
