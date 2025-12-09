@@ -1,6 +1,5 @@
 // src/app.js
 import { signIn, getUser, signOut } from './auth.js';
-// Import updateFragment along with the others
 import { getUserFragments, deleteFragment, updateFragment } from './api.js';
 
 async function displayFragments(user) {
@@ -98,6 +97,13 @@ async function init() {
   const userSection = document.querySelector('#userSection');
   const loginBtn = document.querySelector('#login');
   const usernameSpan = document.querySelector('#username');
+  
+  // Input selectors
+  const fragmentType = document.getElementById('fragmentType');
+  const textInputGroup = document.getElementById('textInputGroup');
+  const fileInputGroup = document.getElementById('fileInputGroup');
+  const fragmentFile = document.getElementById('fragmentFile');
+  const fragmentContent = document.getElementById('fragmentContent');
 
   const user = await getUser();
 
@@ -130,25 +136,52 @@ async function init() {
       }
     });
 
+    // --- Toggle Input Fields based on Type ---
+    // Moved OUTSIDE the refresh button listener to avoid duplicates
+    fragmentType.addEventListener('change', () => {
+      const type = fragmentType.value;
+      if (type.startsWith('image/')) {
+        textInputGroup.classList.add('hidden');
+        fileInputGroup.classList.remove('hidden');
+        // Disable text requirement, enable file check
+        fragmentContent.required = false; 
+      } else {
+        textInputGroup.classList.remove('hidden');
+        fileInputGroup.classList.add('hidden');
+        fragmentContent.required = true;
+      }
+    });
+
     // --- Handle fragment creation ---
     const fragmentForm = document.querySelector('#fragmentForm');
     const createResultDiv = document.querySelector('#createResult');
     
     fragmentForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const type = document.getElementById('fragmentType').value;
-      const content = document.getElementById('fragmentContent').value;
 
-      if (!content.trim()) {
-        createResultDiv.innerHTML = '<div class="result error"> Please enter some content</div>';
-        return;
+      const type = fragmentType.value;
+      let bodyData;
+
+      // Logic to determine if we are sending text or a file
+      if (type.startsWith('image/')) {
+        if (!fragmentFile.files || fragmentFile.files.length === 0) {
+          createResultDiv.innerHTML = '<div class="result error">Please select a file</div>';
+          return;
+        }
+        // For images, we send the file object directly
+        bodyData = fragmentFile.files[0]; 
+      } else {
+        const content = fragmentContent.value;
+        if (!content.trim()) {
+          createResultDiv.innerHTML = '<div class="result error">Please enter some content</div>';
+          return;
+        }
+        bodyData = content;
       }
 
       try {
         createResultDiv.innerHTML = '<div class="result info">Creating fragment...</div>';
         
-        // Use process.env.API_URL with fallback
         const API_URL = process.env.API_URL || 'http://localhost:8080';
         
         const response = await fetch(`${API_URL}/v1/fragments`, {
@@ -157,11 +190,10 @@ async function init() {
             'Content-Type': type,
             'Authorization': `Bearer ${user.idToken}`
           },
-          body: content
+          body: bodyData // Use bodyData, not content
         });
 
         const data = await response.json();
-      
         const locationHeader = response.headers.get('Location');
 
         if (response.ok) {
@@ -176,10 +208,10 @@ async function init() {
           `;
           
           console.log('Fragment created:', data);
-          console.log('Location header:', locationHeader);
 
-          // Clear the form
+          // Clear the form inputs
           document.getElementById('fragmentContent').value = '';
+          document.getElementById('fragmentFile').value = '';
 
           // Refresh the fragments list
           await displayFragments(user);

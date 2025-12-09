@@ -160,6 +160,10 @@
                 <option value="text/html">Text (HTML)</option>
                 <option value="text/csv">Text (CSV)</option>
                 <option value="application/json">Application (JSON)</option>
+                <option value="image/png">Image (PNG)</option>
+                <option value="image/jpeg">Image (JPEG)</option>
+                <option value="image/webp">Image (WEBP)</option>
+                <option value="image/gif">Image (GIF)</option>
               </select>
             </div>
             
@@ -171,6 +175,10 @@
                 rows="6" 
                 required
               ></textarea>
+            </div>
+            <div class="form-group hidden" id="fileInputGroup">
+              <label for="fragmentFile">Upload File:</label>
+              <input type="file" id="fragmentFile" accept="image/*" />
             </div>
             
             <button type="submit">Create Fragment</button>
