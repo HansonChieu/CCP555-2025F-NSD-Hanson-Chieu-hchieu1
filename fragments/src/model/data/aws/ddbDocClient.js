@@ -67,4 +67,3 @@ const ddbDocClient = DynamoDBDocumentClient.from(ddbClient, {
  
 module.exports = ddbDocClient;
 
-test  
