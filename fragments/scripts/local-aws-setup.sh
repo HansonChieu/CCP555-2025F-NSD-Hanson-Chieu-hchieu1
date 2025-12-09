@@ -24,6 +24,12 @@ until (curl http://localhost:4566/_localstack/health | grep "\"s3\": \"\(running
 done
 echo 'LocalStack S3 Ready'
 
+echo 'Waiting for DynamoDB-Local...'
+until (curl http://localhost:8000 > /dev/null 2>&1); do
+    sleep 2
+done
+echo 'DynamoDB-Local Ready'
+
 # Create S3 bucket
 echo "Creating LocalStack S3 bucket: fragments"
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket fragments
