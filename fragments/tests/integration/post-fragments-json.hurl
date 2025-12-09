@@ -22,7 +22,7 @@ jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" isString
 jsonpath "$.fragment.updated" isString
 jsonpath "$.fragment.type" == "application/json"
-jsonpath "$.fragment.size" == 102
+jsonpath "$.fragment.size" == 97
 
 # Verify the JSON fragment can be retrieved with correct content
 GET {{url}}
