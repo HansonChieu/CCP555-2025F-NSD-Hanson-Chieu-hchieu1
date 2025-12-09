@@ -22,6 +22,10 @@
         {
           "name": "API_URL",
           "value": "http://localhost:8080"
+        },
+        {
+          "name": "AWS_DYNAMODB_TABLE_NAME",
+          "value": "fragments"
         }
       ],
       "logConfiguration": {
