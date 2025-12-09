@@ -136,19 +136,16 @@
   <body>
     <h1>Fragments UI</h1>
     
-    <!-- Login Section -->
     <section id="loginSection">
       <div class="container">
         <button id="login">Login with Cognito</button>
       </div>
     </section>
     
-    <!-- User Section (shown after login) -->
     <section id="userSection" class="hidden">
       <div class="container">
         <h2>Welcome, <span id="username"></span>!</h2>
         
-        <!-- Create Fragment Form -->
         <div class="container">
           <h3>Create New Fragment</h3>
           <form id="fragmentForm">
@@ -167,15 +164,15 @@
               </select>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" id="textInputGroup">
               <label for="fragmentContent">Content:</label>
               <textarea 
                 id="fragmentContent" 
                 placeholder="Enter your fragment content here..." 
                 rows="6" 
-                required
               ></textarea>
             </div>
+
             <div class="form-group hidden" id="fileInputGroup">
               <label for="fragmentFile">Upload File:</label>
               <input type="file" id="fragmentFile" accept="image/*" />
@@ -187,7 +184,6 @@
           <div id="createResult"></div>
         </div>
         
-        <!-- Fragments List -->
         <div class="container">
           <h3>My Fragments</h3>
           <button id="refreshFragments">Refresh List</button>
@@ -195,7 +191,6 @@
           <div id="fragmentsList"></div>
         </div>
         
-        <!-- Logout Button -->
         <div class="container">
           <button id="logout">Logout</button>
         </div>
