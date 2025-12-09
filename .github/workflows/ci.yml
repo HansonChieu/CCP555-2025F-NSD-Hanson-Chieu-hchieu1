@@ -144,6 +144,8 @@ jobs:
         # $ chmod +x ./scripts/local-aws-setup.sh
         run: chmod +x ./scripts/local-aws-setup.sh
           ./scripts/local-aws-setup.sh
+      - name: Wait for Services to be Ready
+        run: sleep 15
       - name: Run Hurl Tests
         working-directory: ./fragments
         run: npm run test:integration
