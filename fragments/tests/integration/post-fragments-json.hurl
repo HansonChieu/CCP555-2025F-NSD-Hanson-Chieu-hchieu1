@@ -31,7 +31,7 @@ user1@email.com:password1
 
 HTTP/1.1 200
 Content-Type: application/json
-Content-Length: 102
+Content-Length: 97
 [Asserts]
 jsonpath "$.name" == "test"
 jsonpath "$.value" == 123
