@@ -11,7 +11,7 @@ const path = require('path');
 module.exports.getAll = async (req, res) => {
   try {
     // Check if we should expand the fragments to include full metadata
-    logger.info(`[DEBUG] POST /fragments - User Type: ${typeof req.user}`);
+    logger.info(`[DEBUG] GET fragments - User Type: ${typeof req.user}`);
     logger.info(`[DEBUG] POST /fragments - User Value: ${JSON.stringify(req.user)}`);
     logger.info(`Getting fragments for user: ${req.user}`);
     const expand = req.query.expand === '1';
