@@ -31,3 +31,28 @@ export async function getUserFragments(user, expand=false) {
     console.error('Unable to call GET /v1/fragment', { err });
   }
 }
+
+/**
+ * Deletes a fragment by ID for the authenticated user.
+ */
+export async function deleteFragment(user, id) {
+  console.log(`Deleting fragment ${id}...`);
+  try {
+    const url = `${apiUrl}/v1/fragments/${id}`;
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: user.authorizationHeaders(),
+    });
+
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log('Successfully deleted fragment', { data });
+    return data;
+  } catch (err) {
+    console.error('Unable to call DELETE /v1/fragments/:id', { err });
+    throw err; // Re-throw so the UI can handle the error
+  }
+}

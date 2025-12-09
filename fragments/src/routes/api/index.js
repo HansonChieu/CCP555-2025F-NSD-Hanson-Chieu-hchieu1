@@ -6,6 +6,7 @@ const { Fragment } = require('../../model/fragment');
 const fragmentGet = require('./get'); // Import the whole module
 const fragmentPost = require('./post');
 const fragmentDelete = require('./delete');
+const fragmentPut = require('./put');
 
 const router = express.Router();
 
@@ -33,5 +34,8 @@ router.post('/fragments', rawBody(), fragmentPost);
 
 // DELETE /fragments/:id
 router.delete('/fragments/:id', fragmentDelete);
+
+// PUT /fragments/:id
+router.put('/fragments/:id', rawBody(), fragmentPut);
 
 module.exports = router;

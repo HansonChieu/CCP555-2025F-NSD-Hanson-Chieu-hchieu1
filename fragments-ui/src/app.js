@@ -1,21 +1,20 @@
 // app.js
 import { signIn, getUser, signOut } from './auth.js';
-import { getUserFragments } from './api.js';
+import { getUserFragments, deleteFragment } from './api.js';
+
 
 async function displayFragments(user) {
   const fragmentsListDiv = document.querySelector('#fragmentsList');
   const fragmentsResultDiv = document.querySelector('#fragmentsResult');
-  
+
   try {
-    // Get fragments with expand=1 to get full metadata
     const data = await getUserFragments(user, true);
-    
+
     if (!data || !data.fragments || data.fragments.length === 0) {
       fragmentsListDiv.innerHTML = '<p>No fragments yet. Create one above!</p>';
       return;
     }
-    
-    // Create table to display fragments
+
     const table = document.createElement('table');
     table.innerHTML = `
       <thead>
@@ -25,7 +24,7 @@ async function displayFragments(user) {
           <th>Size</th>
           <th>Created</th>
           <th>Updated</th>
-        </tr>
+          <th>Actions</th> </tr>
       </thead>
       <tbody>
         ${data.fragments.map(fragment => `
@@ -35,16 +34,35 @@ async function displayFragments(user) {
             <td>${fragment.size} bytes</td>
             <td>${new Date(fragment.created).toLocaleString()}</td>
             <td>${new Date(fragment.updated).toLocaleString()}</td>
+            <td>
+              <button class="delete-btn" data-id="${fragment.id}">Delete</button>
+            </td>
           </tr>
         `).join('')}
       </tbody>
     `;
-    
+
+    // 1. Clear current list and Append the table to the DOM first
     fragmentsListDiv.innerHTML = '';
     fragmentsListDiv.appendChild(table);
-    
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.dataset.id;
+        if (confirm('Are you sure you want to delete this fragment?')) {
+          try {
+            await deleteFragment(user, id);
+            await displayFragments(user); // Refresh list
+          } catch (err) {
+            console.error('Delete failed', err);
+            alert('Failed to delete fragment');
+          }
+        }
+      });
+    });
+
     fragmentsResultDiv.innerHTML = `<div class="result success">Found ${data.fragments.length} fragment(s)</div>`;
-    
+
   } catch (error) {
     console.error('Failed to display fragments:', error);
     fragmentsResultDiv.innerHTML = `<div class="result error">Failed to load fragments: ${error.message}</div>`;
@@ -126,7 +144,7 @@ async function init() {
           createResultDiv.innerHTML = `
             <div class="result success">
                Fragment created successfully!<br>
-              <strong>ID:</strong> <span class="fragment-id">${data.fragment.id}</span><br>
+              <strong>ID:</strong> <span  class="fragment-id">${data.fragment.id}</span><br>
               <strong>Type:</strong> ${data.fragment.type}<br>
               <strong>Size:</strong> ${data.fragment.size} bytes<br>
               ${locationHeader ? `<strong>Location:</strong> <div class="location-header">${locationHeader}</div>` : ''}

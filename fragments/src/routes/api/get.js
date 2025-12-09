@@ -4,6 +4,7 @@ const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 const md = require('markdown-it')();
 const path = require('path'); 
+const sharp = require('sharp');
 
 /**
  * Get a list of fragments for the current user
@@ -49,6 +50,7 @@ module.exports.getInfo = async (req, res) => {
  */
 module.exports.getById = async (req, res) => {
   try {
+    
     // Use path.parse to safely separate the ID and the extension
     // e.g., "1234.html" -> name="1234", ext=".html"
     const { name: id, ext } = path.parse(req.params.id);
@@ -66,6 +68,37 @@ module.exports.getById = async (req, res) => {
         const html = md.render(data.toString());
         res.setHeader('Content-Type', 'text/html');
         return res.status(200).send(html);
+      }
+
+      // IMAGE CONVERSION LOGIC
+      const imageTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+      if (imageTypes.includes(fragment.type)) {
+         try {
+           let convertedData;
+           let contentType;
+
+           if (ext === '.png') {
+             convertedData = await sharp(data).toFormat('png').toBuffer();
+             contentType = 'image/png';
+           } else if (ext === '.jpg' || ext === '.jpeg') {
+             convertedData = await sharp(data).toFormat('jpeg').toBuffer();
+             contentType = 'image/jpeg';
+           } else if (ext === '.webp') {
+             convertedData = await sharp(data).toFormat('webp').toBuffer();
+             contentType = 'image/webp';
+           } else if (ext === '.gif') {
+              convertedData = await sharp(data).toFormat('gif').toBuffer();
+              contentType = 'image/gif';
+           }
+
+           if (convertedData) {
+             res.setHeader('Content-Type', contentType);
+             return res.status(200).send(convertedData);
+           }
+         } catch (e) {
+           logger.warn({ error: e }, 'Error converting image');
+           // fall through to 415
+         }
       }
 
       // 2. If the extension matches the current type (e.g. .json for application/json), just return it
