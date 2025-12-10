@@ -60,25 +60,24 @@ export async function deleteFragment(user, id) {
 /**
  * Updates a fragment's data.
  */
-export async function updateFragment(user, id, newData) {
+export async function updateFragment(user, id, newData, contentType) {
   console.log(`Updating fragment ${id}...`);
   try {
     const url = `${apiUrl}/v1/fragments/${id}`;
     const res = await fetch(url, {
       method: 'PUT',
       headers: {
-        // We reuse the existing auth headers
         ...user.authorizationHeaders(),
-        // We need to set the type, or let the browser set it? 
-        // For text updates, usually text/plain is fine.
-        // For simplicity in this assignment, we'll assume text updates for now.
-        'Content-Type': 'text/plain', 
+        // Use the specific type passed in, or fallback to plain text
+        'Content-Type': contentType || 'text/plain',
       },
       body: newData
     });
 
     if (!res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`);
+      // Try to parse the error message from the JSON response
+      const errorData = await res.json();
+      throw new Error(`${res.status} ${res.statusText}: ${errorData.error || 'Unknown error'}`);
     }
 
     const data = await res.json();
@@ -86,6 +85,29 @@ export async function updateFragment(user, id, newData) {
     return data;
   } catch (err) {
     console.error('Unable to call PUT /v1/fragments/:id', { err });
+    throw err;
+  }
+}
+
+/**
+ * Request a specific fragment's data (possibly converted)
+ */
+export async function getFragmentData(user, id, ext = '') {
+  console.log(`Getting fragment data for ${id}${ext}...`);
+  try {
+    const url = `${apiUrl}/v1/fragments/${id}${ext}`;
+    const res = await fetch(url, {
+      headers: user.authorizationHeaders(), // This adds the missing Token!
+    });
+
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    // Return the data as a Blob (handles images and text)
+    return await res.blob();
+  } catch (err) {
+    console.error('Unable to get fragment data', { err });
     throw err;
   }
 }

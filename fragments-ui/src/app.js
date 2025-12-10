@@ -1,13 +1,12 @@
 // src/app.js
 import { signIn, getUser, signOut } from './auth.js';
-import { getUserFragments, deleteFragment, updateFragment } from './api.js';
+import { getUserFragments, deleteFragment, updateFragment, getFragmentData } from './api.js';
 
 async function displayFragments(user) {
   const fragmentsListDiv = document.querySelector('#fragmentsList');
   const fragmentsResultDiv = document.querySelector('#fragmentsResult');
 
   try {
-    // Get fragments with expand=1 to get full metadata
     const data = await getUserFragments(user, true);
 
     if (!data || !data.fragments || data.fragments.length === 0) {
@@ -15,7 +14,6 @@ async function displayFragments(user) {
       return;
     }
 
-    // Create table to display fragments
     const table = document.createElement('table');
     table.innerHTML = `
       <thead>
@@ -37,7 +35,8 @@ async function displayFragments(user) {
             <td>${new Date(fragment.created).toLocaleString()}</td>
             <td>${new Date(fragment.updated).toLocaleString()}</td>
             <td>
-              <button class="update-btn" data-id="${fragment.id}">Update</button>
+              <button class="convert-btn" data-id="${fragment.id}">Convert</button>
+              <button class="update-btn" data-id="${fragment.id}" data-type="${fragment.type}">Update</button>
               <button class="delete-btn" data-id="${fragment.id}">Delete</button>
             </td>
           </tr>
@@ -45,18 +44,17 @@ async function displayFragments(user) {
       </tbody>
     `;
 
-    // 1. Clear current list and Append the table to the DOM first
     fragmentsListDiv.innerHTML = '';
     fragmentsListDiv.appendChild(table);
 
-    // 2. Attach DELETE Event Listeners
+    // Attach DELETE Listeners
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = e.target.dataset.id;
         if (confirm('Are you sure you want to delete this fragment?')) {
           try {
             await deleteFragment(user, id);
-            await displayFragments(user); // Refresh list
+            await displayFragments(user);
           } catch (err) {
             console.error('Delete failed', err);
             alert('Failed to delete fragment');
@@ -65,20 +63,47 @@ async function displayFragments(user) {
       });
     });
 
-    // 3. Attach UPDATE Event Listeners
+    // Attach UPDATE Listeners
     document.querySelectorAll('.update-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = e.target.dataset.id;
-        // Prompt user for new content (simple UI for assignment purposes)
-        const newContent = prompt('Enter new content for this fragment:');
+        const type = e.target.dataset.type; // Get the type from the button
         
-        if (newContent !== null) { // If user didn't cancel
+        const newContent = prompt(`Enter new content for this fragment (${type}):`);
+        
+        if (newContent !== null) {
           try {
-            await updateFragment(user, id, newContent);
-            await displayFragments(user); // Refresh list to show updated timestamp/size
+            // Pass the type to the API function
+            await updateFragment(user, id, newContent, type);
+            await displayFragments(user);
           } catch (err) {
             console.error('Update failed', err);
             alert('Failed to update fragment: ' + err.message);
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.convert-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.dataset.id;
+        // Ask user what extension they want
+        const ext = prompt("What extension do you want? (e.g., .html, .jpg, .txt)");
+        
+        if (ext) {
+          try {
+            // 1. Fetch the converted data
+            const blob = await getFragmentData(user, id, ext);
+            
+            // 2. Create a temporary URL for the Blob
+            const url = URL.createObjectURL(blob);
+            
+            // 3. Open it in a new tab
+            window.open(url, '_blank');
+            
+          } catch (err) {
+            console.error('Conversion failed', err);
+            alert('Failed to convert/view fragment: ' + err.message);
           }
         }
       });

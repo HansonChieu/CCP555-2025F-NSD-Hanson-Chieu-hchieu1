@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">89.28% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/21</span>
+                <span class='fraction'>25/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>8/10</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">92.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/21</span>
+                <span class='fraction'>25/27</span>
             </div>
         
             
@@ -123,7 +123,16 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -131,16 +140,23 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -159,9 +175,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -191,37 +209,46 @@ const logger = require('../../logger');
 module.exports = async (req, res) =&gt; {
   try {
     logger.info('POST /v1/fragments - Creating new fragment');
+    logger.debug('req.body type:', typeof req.body);
+    logger.debug('req.body:', req.body);
 &nbsp;
     // Ensure request body is a Buffer
     let data = req.body;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!Buffer.isBuffer(data)) {
-<span class="cstat-no" title="statement not covered" >      data = Buffer.from(req.body);</span>
+    if (!Buffer.isBuffer(data)) {
+      logger.debug('Converting body to Buffer');
+      data = Buffer.from(req.body || '');
     }
+    logger.debug('Data buffer created successfully');
 &nbsp;
-    // Normalize the Content-Type header
-    const contentTypeHeader = req.get('Content-Type').split(';')[0].trim();
-    logger.debug(`Content-Type: ${contentTypeHeader}`);
+ // Get full and normalized content types
+const fullContentType = req.get('Content-Type') || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+const normalizedContentType = fullContentType.split(';')[0].trim();
 &nbsp;
-    if (!Fragment.isSupportedType(contentTypeHeader)) {
-      return res.status(415).json({
-        status: 'error',
-        error: 'Unsupported Media Type',
-      });
-    }
+<span class="missing-if-branch" title="if path not taken" >I</span>if (!normalizedContentType) <span class="cstat-no" title="statement not covered" >return res.status(400).json({ error: 'Content-Type required' });</span>
+&nbsp;
+// Use normalized for validation
+if (!Fragment.isSupportedType(normalizedContentType)) {
+  return res.status(415).json({
+    status: 'error',
+    error: 'Unsupported Media Type',
+  });
+}
 &nbsp;
     // Create the fragment metadata
     const fragment = new Fragment({
       ownerId: req.user,
-      type: contentTypeHeader,
+      type: fullContentType,
       size: data.length,
     });
 &nbsp;
     // Save the fragment data
     await fragment.save();
+    logger.debug(`Saved Fragment ID: ${fragment.id}`);
     await fragment.setData(data);
 &nbsp;
-    const apiUrl = process.env.API_URL || `${req.protocol}://${req.get('host')}`;
-    const location = `${apiUrl}/v1/fragments/${fragment.id}`;
+   const apiUrl = process.env.API_URL;
+   const location = `${apiUrl}/v1/fragments/${fragment.id}`;
+&nbsp;
 &nbsp;
     res.setHeader('Location', location);
     res.status(201).json({
@@ -236,7 +263,7 @@ module.exports = async (req, res) =&gt; {
       },
     });
   } catch (err) {
-<span class="cstat-no" title="statement not covered" >    logger.error('Error creating fragment:', err);</span>
+<span class="cstat-no" title="statement not covered" >    logger.error({ err }, 'Error creating fragment in POST handler');</span>
 <span class="cstat-no" title="statement not covered" >    res.status(500).json({</span>
       status: 'error',
       error: 'Failed to create fragment',
@@ -250,7 +277,7 @@ module.exports = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-24T22:22:06.085Z
+                at 2025-12-09T23:15:43.732Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
